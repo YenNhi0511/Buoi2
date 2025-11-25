@@ -1,15 +1,19 @@
+// lib/core/injection_container.dart - CẬP NHẬT
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 
 import '../data/repositories/auth_repository_impl.dart';
 import '../data/repositories/restaurant_repository_impl.dart';
 import '../data/repositories/notification_repository_impl.dart';
+import '../data/repositories/favorite_repository_impl.dart';
 import '../domain/repositories/auth_repository.dart';
 import '../domain/repositories/restaurant_repository.dart';
 import '../domain/repositories/notification_repository.dart';
+import '../domain/repositories/favorite_repository.dart';
 import '../features/review/domain/usecases/add_review.dart'
     as features_add_review;
 import '../domain/usecases/get_restaurants.dart';
@@ -19,6 +23,7 @@ import '../features/review/domain/usecases/review_usecases.dart';
 import '../features/review/presentation/providers/review_provider.dart';
 import '../presentation/providers/auth_provider.dart' as presentation_auth;
 import '../presentation/providers/restaurant_provider.dart';
+import '../presentation/providers/favorite_provider.dart';
 import 'database_helper.dart';
 import 'services/image_service.dart';
 import 'notification_service.dart';
@@ -30,6 +35,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => FirebaseAuth.instance);
   sl.registerLazySingleton(() => FirebaseFirestore.instance);
   sl.registerLazySingleton(() => FirebaseStorage.instance);
+  sl.registerLazySingleton(() => FirebaseFunctions.instance);
   sl.registerLazySingleton(() => http.Client());
   sl.registerLazySingleton(() => DatabaseHelper());
 
@@ -54,6 +60,10 @@ Future<void> init() async {
     () => ReviewRepositoryImpl(firestore: sl(), imageService: sl()),
   );
 
+  sl.registerLazySingleton<FavoriteRepository>(
+    () => FavoriteRepositoryImpl(firestore: sl()),
+  );
+
   // Use cases
   sl.registerLazySingleton(() => GetRestaurants(sl()));
   sl.registerLazySingleton(() => features_add_review.AddReview(sl(), sl()));
@@ -68,8 +78,12 @@ Future<void> init() async {
   sl.registerFactory(
     () => presentation_auth.AuthProvider(authRepository: sl()),
   );
+
   sl.registerFactory(() => RestaurantProvider(getRestaurantsUseCase: sl()));
+
   sl.registerFactory(
     () => ReviewProvider(reviewRepository: sl(), imageService: sl()),
   );
+
+  sl.registerFactory(() => FavoriteProvider(repository: sl()));
 }
