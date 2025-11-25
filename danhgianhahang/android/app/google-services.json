@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "679479915282",
+    "project_id": "danhgianhahang-12bb6",
+    "storage_bucket": "danhgianhahang-12bb6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:679479915282:android:f6421875fba8b92336f9cb",
+        "android_client_info": {
+          "package_name": "com.example.danhgianhahang"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkE0nOeXs6UaUiKjrsl-0tW-Xh_EYLRwU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
